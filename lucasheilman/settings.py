@@ -26,7 +26,9 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', ')o4p87vw+lkbx4^t$ca2zosxeqiwv+
 #DEBUG = True
 DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'arcane-stream-63069.herokuapp.com','127.0.0.1',
+]
 
 
 # Application definition
