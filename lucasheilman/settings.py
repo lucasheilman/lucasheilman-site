@@ -30,6 +30,7 @@ ALLOWED_HOSTS = [
     'arcane-stream-63069.herokuapp.com',
     '127.0.0.1',
     'lucasheilman.com',
+    'www.lucasheilman.com',
 ]
 
 
