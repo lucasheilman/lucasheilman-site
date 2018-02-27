@@ -285,6 +285,7 @@ a:hover, a:active, a:focus {
 .about-image-thumb img {
   border-radius: 5px;
   margin-bottom: 22px;
+  image-orientation: from-image;
 }
 
 .about-image-thumb .social-icon li a {
