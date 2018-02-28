@@ -213,10 +213,10 @@ a:hover, a:active, a:focus {
   background-color: #98B9E2;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  -webkit-background-size: auto 100%;
-  -moz-background-size: auto 100%;
-  -o-background-size: auto 100%;
-  background-size: auto 100%;
+  -webkit-background-size: 100% auto;
+  -moz-background-size: 100% auto;
+  -o-background-size: 100% auto;
+  background-size: 100% auto;
   background-position: center;
   height: 100%;
   width: 100%;
