@@ -212,10 +212,10 @@ a:hover, a:active, a:focus {
   background-image: url('../images/topmaybe1.jpg');
   background-repeat: no-repeat;
   background-attachment: fixed;
-  -webkit-background-size: cover;
-  -moz-background-size:cover;
-  -o-background-size:cover;
-  background-size: cover;
+  -webkit-background-size: 100%;
+  -moz-background-size: 100%;
+  -o-background-size:100%;
+  background-size: 100%;
   background-position: center;
   height: 100%;
   width: 100%;
@@ -431,18 +431,4 @@ footer p {
   color: #ffffff;
   transform: scale(1.1);
   top: -5px;
-}
-
-
-
-@media (max-width: 767px) {
-  .page .col-sm-3 {
-    width: 25%;
-  }
-  .page .col-sm-6 {
-    width: 50%;
-  }
-  .page .col-sm-9 {
-    width: 75%;
-  }
 }
