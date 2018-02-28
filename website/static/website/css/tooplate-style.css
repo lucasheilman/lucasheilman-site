@@ -239,7 +239,7 @@ a:hover, a:active, a:focus {
   background: #ffffff;
   border-radius: 5px;
   padding: 42px 22px;
-  cursor: crosshair;
+  cursor: pointer;
   position: relative;
   top: 0;
   -webkit-transition: all ease-in-out 0.4s;
@@ -285,7 +285,6 @@ a:hover, a:active, a:focus {
 .about-image-thumb img {
   border-radius: 5px;
   margin-bottom: 22px;
-  image-orientation: from-image;
 }
 
 .about-image-thumb .social-icon li a {
