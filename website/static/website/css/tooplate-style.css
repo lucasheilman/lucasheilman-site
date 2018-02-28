@@ -215,10 +215,10 @@ a:hover, a:active, a:focus {
   -webkit-background-size: cover;
   -moz-background-size:cover;
   -o-background-size:cover;
+  background-size: cover;
   background-position: center;
   height: 100%;
   width: 100%;
-  text-align: right;
 }
 
 
