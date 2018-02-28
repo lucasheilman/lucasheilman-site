@@ -209,13 +209,14 @@ a:hover, a:active, a:focus {
 -----------------------------------------*/
 
 #home {
-  background-image: url('../images/topmaybe1.jpg');
+  background-image: url('../images/topmaybe3.jpg');
+  background-color: #98B9E2;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  -webkit-background-size: 100%;
-  -moz-background-size: 100%;
-  -o-background-size:100%;
-  background-size: 100%;
+  -webkit-background-size: auto 100%;
+  -moz-background-size: auto 100%;
+  -o-background-size: auto 100%;
+  background-size: auto 100%;
   background-position: center;
   height: 100%;
   width: 100%;
