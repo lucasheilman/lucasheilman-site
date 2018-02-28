@@ -435,4 +435,14 @@ footer p {
 
 
 
-
+@media (max-width: 767px) {
+  .page .col-sm-3 {
+    width: 25%;
+  }
+  .page .col-sm-6 {
+    width: 50%;
+  }
+  .page .col-sm-9 {
+    width: 75%;
+  }
+}
