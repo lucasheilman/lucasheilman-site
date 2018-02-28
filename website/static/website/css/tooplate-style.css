@@ -213,19 +213,15 @@ a:hover, a:active, a:focus {
 -----------------------------------------*/
 
 #home {
-  background: url('../images/topmaybe1.jpg') 50% 0 repeat-y fixed;
-  background-size: cover;
-  background-position: center center;
-  display: -webkit-box;
-  display: -webkit-flex;
-   display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
-   align-items: center;
-  height: 100vh;
-  position: relative;
+  background-image: url('../images/topmaybe1.jpg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  -webkit-background-size: cover;
+  -moz-background-size:cover;
+  -o-background-size:cover;
+  background-position: center;
+  height: 100%;
+  width: 100%;
   text-align: right;
 }
 
@@ -447,8 +443,9 @@ footer p {
   Mobile Responsive styles              
 -----------------------------------------*/
 
-@media (max-width: 980px) {
+@media (max-width: 100%) {
   #home {
+
     height: 55vh;
   }
 
@@ -495,3 +492,4 @@ footer p {
     height: 125vh;
   }
 }
+
