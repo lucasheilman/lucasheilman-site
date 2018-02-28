@@ -210,7 +210,7 @@ a:hover, a:active, a:focus {
 
 #home {
   background-image: url('../images/topmaybe4.jpg');
-  background-color: #98B9E2;
+
   background-repeat: no-repeat;
   background-attachment: fixed;
   -webkit-background-size: 100% auto;
