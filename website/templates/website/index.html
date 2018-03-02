@@ -44,10 +44,10 @@ http://www.tooplate.com/view/2087-kalay
 
                <div class="col-md-offset-5 col-md-7 col-sm-12">
                     <div style="text-align: right; padding-right: 20px; padding-left: 20px">
-                         <h1 class="wow fadeInUp" style="color:black; margin-top: 0px; margin-bottom: -5px;" >Lucas</h1>
+                         <h1 class="wow fadeInUp" style="color:black; margin-top: 0px; margin-bottom: -5px;" >{{index.title}}</h1>
                          
-                         <p class="wow fadeInUp" style="color:black; margin-bottom: -10px; font-size: 14px">"Another One"</p>
-                         <p class="wow fadeInUp" style="color:black; font-size: 10px">-DJ Khaled</p>
+                         <p class="wow fadeInUp" style="color:black; margin-bottom: -10px; font-size: 14px">{{index.quote}}</p>
+                         <p class="wow fadeInUp" style="color:black; font-size: 10px">{{index.who_said_it}}</p>
                          {% comment %}
                          <a href="#service" class="wow fadeInUp smoothScroll btn btn-default section-btn" style="margin-top: 10px" >discover more</a>
                          {% endcomment %}
@@ -65,80 +65,22 @@ http://www.tooplate.com/view/2087-kalay
 
                <div class="wow fadeInUp section-title" >
                     <!-- SECTION TITLE -->
-                    <h2>This is my stuff</h2>
+                    <h2>{{index.section_header}}</h2>
                </div>
 
+               {% for item in social_medias %}
                <div class="col-md-3 col-sm-6 wow fadeInUp" >
-                    <a href="https://open.spotify.com/user/1298776749" target = "_blank">
+                    <a href="{{item.link}}" target = "_blank">
                          <div class="service-thumb">
-                              <i class="fa fa-spotify"></i>
-                              <h4>Spotify </h4>
-                              <p>Follow me and peep my first two public playlists #strictlybangerz</p>
-                         </div>
-                    </a>
-               </div>
-
-               <div class="col-md-3 col-sm-6 wow fadeInUp" >
-                    <a href="https://www.instagram.com/lucas_heilman/" target = "_blank">
-                         <div class="service-thumb" >
-                              <i class="fa fa-instagram"></i>
-                              <h4>Instagram</h4>
-                              <p>Follow</p>
-                         </div>
-                    </a>
-               </div>
-
-               <div class="col-md-3 col-sm-6 wow fadeInUp" >
-                    <a href="https://www.snapchat.com/add/lucasheilman" target = "_blank">
-                         <div class="service-thumb" >
-                              <i class="fa fa-snapchat-ghost"></i>
-                              <h4>Snapchat</h4>
-                              <p>Add me so you can see what I'm eating</p>
-                         </div>
-                    </a>
-               </div>
-
-               <div class="col-md-3 col-sm-6 wow fadeInUp" >
-                    <a href="https://www.facebook.com/lucas.heilman" target = "_blank">
-                         <div class="service-thumb" >
-                              <i class="fa fa-facebook-square"></i>
-                              <h4>Facebook</h4>
-                              <p>You can add me on facebook I guess, not sure why tho</p>
-                         </div>
-                    </a>
-               </div>
-
-               <div class="col-md-3 col-sm-6 wow fadeInUp" >
-                    <a href="https://twitter.com/lucasheilman" target = "_blank">
-                         <div class="service-thumb" >
-                              <i class="fa fa-twitter"></i>
-                              <h4>Real Twitter</h4>
-                              <p>I never tweet here...</p>
-                         </div>
-                    </a>
-               </div>
-
-               <div class="col-md-3 col-sm-6 wow fadeInUp" >
-                    <a href="https://twitter.com/newmusic_friday" target = "_blank">
-                         <div class="service-thumb" >
-                              <i class="fa fa-music"></i>
-                              <i class="fa fa-twitter"></i>
-                              <h4>Music Twitter</h4>
-                              <p>I used to post music reviews here but then I stopped and now I just post randomly</p>
-                         </div>
-                    </a>
-               </div>
-
-               <div class="col-md-3 col-sm-6 wow fadeInUp" >
-                    <a href="https://www.linkedin.com/in/lucas-heilman-525139114/" target = "_blank">
-                         <div class="service-thumb" >
-                              <i class="fa fa-linkedin-square"></i>
-                              <h4>LinkedIn</h4>
-                              <p>I'll be graduating in May with a degree in computer science. Please Hire Me.</p>
+                              {{item.font_awesome|safe}}
+                              <h4>{{item.title}}</h4>
+                              <p>{{item.description}}</p>
                          </div>
                     </a>
                </div>
                
+               {% endfor %}
+
                <div class="col-md-3 col-sm-6 wow fadeInUp" >
                     <div class="service-thumb">
                          <i class="fa fa-camera"></i>

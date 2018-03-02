@@ -7,4 +7,8 @@ from django.template import loader
 from .models import *
 
 def index(request):
-    return render(request, 'website/index.html')
+	context = {}
+	index_page = page.objects.get(page_name = "index")
+	context['index'] = index_page
+	context['social_medias'] = list(index_page.social_medias.all())
+	return render(request, 'website/index.html', context)

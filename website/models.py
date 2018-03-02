@@ -1,8 +1,21 @@
 from django.db import models
 
-class Question(models.Model):
-    question_text = models.CharField(max_length=200)
-    pub_date = models.DateTimeField('date published')
+class page(models.Model):
+	page_name = models.TextField()
+	title = models.TextField()
+	quote = models.TextField()
+	who_said_it = models.TextField()
+	section_header = models.TextField()
+	social_medias = models.ManyToManyField("social_media")
 
-    def __str__(self):
-    	return self.question_text
+	def __str__(self):
+		return self.page_name
+
+class social_media(models.Model):
+	title = models.TextField()
+	link = models.TextField()
+	font_awesome = models.TextField()
+	description = models.TextField()
+
+	def __str__(self):
+		return self.title
