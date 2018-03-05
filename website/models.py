@@ -16,6 +16,7 @@ class social_media(models.Model):
 	link = models.TextField()
 	font_awesome = models.TextField()
 	description = models.TextField()
+	order = models.IntegerField()
 
 	def __str__(self):
 		return self.title

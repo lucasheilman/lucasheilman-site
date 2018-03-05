@@ -10,5 +10,5 @@ def index(request):
 	context = {}
 	index_page = page.objects.get(page_name = "index")
 	context['index'] = index_page
-	context['social_medias'] = list(index_page.social_medias.all())
+	context['social_medias'] = list(index_page.social_medias.all().order_by('order'))
 	return render(request, 'website/index.html', context)
