@@ -6,12 +6,12 @@ verify_ssl = true
 
 [packages]
 
-dj-database-url=="*"
-Django=="*"
-gunicorn=="*"
-psycopg2=="*"
-pytz=="*"
-whitenoise=="*"
+dj-database-url = "*"
+Django = "*"
+gunicorn = "*"
+psycopg2 = "*"
+pytz = "*"
+whitenoise = "*"
 
 
 [requires]
