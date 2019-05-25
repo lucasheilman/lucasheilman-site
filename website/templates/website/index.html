@@ -14,7 +14,7 @@
 
 <meta charset="UTF-8">
 <meta name="description" content="A website about Lucas Heilman">
-<meta name="keywords" content="Lucas, Heilman, Blog, Social Media, Larry, Spotify, Instagram, Snapchat, Twitter, Facebook, Music, LinkedIn, Photography, Food">
+<meta name="keywords" content="Lucas, Heilman, Social Media, Spotify, Instagram, Snapchat, Twitter, Facebook, Music, LinkedIn">
 <meta name="author" content="Lucas Heilman">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="{% static "website/images/spongesky.png" %}">
@@ -43,30 +43,25 @@ http://www.tooplate.com/view/2087-kalay
 <div class="preloader">
      
      <div class="spinner">
-          <p>This website is best viewed with a mobile device</p>
-          <br>
-          <br>
           <span class="spinner-rotate"></span>
      </div>
 </div>
 
 
 <!-- HOME SECTION -->
-<section id="home">
-          <div class="row">
-
-               <div class="col-md-offset-5 col-md-7 col-sm-12">
-                    <div style="text-align: right; padding-right: 20px; padding-left: 20px">
-                         <h1 class="wow fadeInUp" style="color:black; margin-top: 0px; margin-bottom: -5px;" >{{index.title}}</h1>
-                         
-                         <p class="wow fadeInUp" style="color:black; margin-bottom: -10px; font-size: 14px">{{index.quote}}</p>
-                         <p class="wow fadeInUp" style="color:black; font-size: 10px">{{index.who_said_it}}</p>
-                         {% comment %}
-                         <a href="#service" class="wow fadeInUp smoothScroll btn btn-default section-btn" style="margin-top: 10px" >discover more</a>
-                         {% endcomment %}
-                    </div>
+<section id="home" style="{% if is_mobile %} height: 320px {% else %} height: 100% {% endif %}">
+     <div class="row">
+          <div class="col-md-offset-5 col-md-7 col-sm-12">
+               <div style="text-align: right; padding-right: 20px; padding-left: 20px">
+                    <h1 class="wow fadeInUp" style="color:black; margin-top: 0px; margin-bottom: -5px;" >{{index.title}}</h1>
+                    
+                    <p class="wow fadeInUp" style="color:black; margin-bottom: -10px; font-size: 14px">{{index.quote}}</p>
+                    <p class="wow fadeInUp" style="color:black; font-size: 10px">{{index.who_said_it}}</p>
+                    {% comment %}
+                    <a href="#service" class="wow fadeInUp smoothScroll btn btn-default section-btn" style="margin-top: 10px" >discover more</a>
+                    {% endcomment %}
                </div>
-
+          </div>
      </div>
 </section>
 
@@ -81,6 +76,13 @@ http://www.tooplate.com/view/2087-kalay
                     <h2>{{index.section_header}}</h2>
                </div>
 
+               <div class="col-md-3 col-sm-6 wow fadeInUp" style = "padding-bottom: 15px; padding-top: 15px">
+                    <div class="service-thumb">
+                         <i class="fa fa-question"></i>
+                         <h4>??????</h4>
+                         <p>Something Cool in work ;)</p>
+                    </div>
+               </div>
                {% for item in social_medias %}
                <div class="col-md-3 col-sm-6 wow fadeInUp" style = "padding-bottom: 15px; padding-top: 15px">
                     <a href="{{item.link}}" target = "_blank">
@@ -93,15 +95,6 @@ http://www.tooplate.com/view/2087-kalay
                </div>
                
                {% endfor %}
-
-               <div class="col-md-3 col-sm-6 wow fadeInUp" style = "padding-bottom: 15px; padding-top: 15px">
-                    <div class="service-thumb">
-                         <i class="fa fa-camera"></i>
-                         <i class="fa fa-cutlery"></i>
-                         <h4>Misc. Pics</h4>
-                         <p>Some pictures of me but mostly pictures of my food (To come later)</p>
-                    </div>
-               </div>
 
           </div>
      </div>
@@ -255,8 +248,7 @@ http://www.tooplate.com/view/2087-kalay
         <div class="row">
 
                <div class="wow fadeInUp col-md-12 col-sm-12" >
-                    <p class="white-color">Copyright &copy; 2018 Lucas Heilman</p>
-                    <p class="white-color">This website is best viewed with a mobile device</p>
+                    <p class="white-color">Copyright &copy; {{year}} Lucas Heilman</p>
           </div>
      </div>
 </footer>
