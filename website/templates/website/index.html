@@ -37,6 +37,12 @@ http://www.tooplate.com/view/2087-kalay
 <link rel="stylesheet" href="{% static "website/css/tooplate-style.css" %}">
 
 </head>
+
+<body>
+<h1> Nothing to see here (: </h1>
+</body>
+
+{% comment %}
 <body>
 
 <!-- PRE LOADER -->
@@ -57,9 +63,11 @@ http://www.tooplate.com/view/2087-kalay
                     
                     <p class="wow fadeInUp" style="color:black; margin-bottom: -10px; font-size: 14px">{{index.quote}}</p>
                     <p class="wow fadeInUp" style="color:black; font-size: 10px">{{index.who_said_it}}</p>
+                    {% endcomment %}
                     {% comment %}
                     <a href="#service" class="wow fadeInUp smoothScroll btn btn-default section-btn" style="margin-top: 10px" >discover more</a>
                     {% endcomment %}
+                    {% comment %}
                </div>
           </div>
      </div>
@@ -80,7 +88,7 @@ http://www.tooplate.com/view/2087-kalay
                     <div class="service-thumb">
                          <i class="fa fa-question"></i>
                          <h4>??????</h4>
-                         <p>Something Cool in work ;)</p>
+                         <p>Working on something cool ;)</p>
                     </div>
                </div>
                {% for item in social_medias %}
@@ -99,6 +107,7 @@ http://www.tooplate.com/view/2087-kalay
           </div>
      </div>
 </section>
+{% endcomment %}
 {% comment %}
 <!-- ABOUT SECTION -->
 <section id="about" class="parallax-section">
@@ -192,11 +201,13 @@ http://www.tooplate.com/view/2087-kalay
      </div>
 </section>
 {% endcomment %}
+{% comment %}
 
 <!-- CONTACT SECTION -->
 <section id="contact" class="parallax-section" style="padding-top: 0px; padding-bottom: 10px">
      <div class="container">
           <div class="row">
+               {% endcomment %}
                {% comment %}
                <div class="col-md-12 col-sm-12">
                     <!-- SECTION TITLE -->
@@ -236,6 +247,7 @@ http://www.tooplate.com/view/2087-kalay
                     </div>
                </div>
                {% endcomment %}
+               {% comment %}
 
           </div>
      </div>
@@ -264,4 +276,6 @@ http://www.tooplate.com/view/2087-kalay
 <script src="{% static "website/js/custom.js" %}"></script>
 
 </body>
+
+{% endcomment %}
 </html>
