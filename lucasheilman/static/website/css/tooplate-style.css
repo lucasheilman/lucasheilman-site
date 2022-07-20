@@ -34,7 +34,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 h1 {
-  color: #ffffff;
+  color: #000000;
   font-size: 45px;
   line-height: normal;
 }
@@ -209,7 +209,7 @@ a:hover, a:active, a:focus {
 -----------------------------------------*/
 
 #home {
-  background-image: url('../images/pizzalife.jpg');
+  background-image: url('../images/pizzalife1.jpg');
 
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -218,7 +218,6 @@ a:hover, a:active, a:focus {
   -o-background-size: 100% auto;
   background-size: 100% auto;
   background-position: center;
-  height: 320px;
   width: 100%;
 }
 
