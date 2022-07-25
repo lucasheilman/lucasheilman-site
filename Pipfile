@@ -8,6 +8,7 @@ verify_ssl = true
 
 dj-database-url = "*"
 Django = "*"
+django-crispy-forms = "*"
 gunicorn = "*"
 psycopg2 = "*"
 pytz = "*"

@@ -1,0 +1,7 @@
+form .control-label {
+    display: inline-block;
+}
+
+form .controls {
+	margin-left: 5px;
+}

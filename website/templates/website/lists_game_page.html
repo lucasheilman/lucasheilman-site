@@ -1,0 +1,18 @@
+{% extends 'website/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+{% load static %}
+
+  <br>
+
+  <br>
+
+  {% csrf_token %}
+
+  <h3> Waiting for {{ game_name }} to start </h3>
+
+
+{% endblock %}

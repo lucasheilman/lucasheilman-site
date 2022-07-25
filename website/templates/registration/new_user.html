@@ -1,0 +1,13 @@
+{% extends 'website/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<br>
+<br>
+
+<form enctype="multipart/form-data" method="post" novalidate>
+  {% crispy new_user_form %}
+</form>
+
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'website/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+{% load static %}
+
+  <br>
+
+  <br>
+
+  {% csrf_token %}
+
+  <form method="post" novalidate style="margin-left: 5px">
+        {% crispy configure_game_form %}
+  </form>
+
+
+
+{% endblock %}
