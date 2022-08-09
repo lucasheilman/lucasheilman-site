@@ -12,7 +12,23 @@
 
   {% csrf_token %}
 
-  <h3> Waiting for {{ game_name }} to start </h3>
+  {% if lists_game_obj.state == "pending" %}
+    <h3> Waiting for {{ lists_game_obj.host }} to configure {{ lists_game_obj.name }} </h3>
+  {% endif %}
+  {% if lists_game_obj.state == "entering" %}
+    <h3> Waiting for {% for player in lists_game_obj.players_entering_words.all %} {{player.username}}, {% endfor %} to enter words for {{ lists_game_obj.name }} </h3>
+    {% if request.user in lists_game_obj.players_entering_words.all %}
+      <form method="post" novalidate style="margin-left: 5px">
+            {% crispy entering_words_form %}
+      </form>
+    {% endif %}
+  {% endif %}
+  {% if lists_game_obj.state == "started" and lists_game_obj.current_player != request.user %}
+    <h3> It's {{ lists_game_obj.current_player }}'s turn </h3>
+  {% endif %}
+  {% if lists_game_obj.state == "started" and lists_game_obj.current_player == request.user %}
+    <h3> It's your turn! </h3>
+  {% endif %}
 
 
 {% endblock %}

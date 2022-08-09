@@ -25,11 +25,15 @@ class social_media(models.Model):
 class lists_game(models.Model):
 	name = models.TextField(default="", blank=True)
 	words = models.ManyToManyField("word", blank=True)
-	teams = models.ManyToManyField("team", blank=True)
 	state = models.TextField(default="pending", blank=True)
 	players = models.ManyToManyField(User, related_name="players", blank=True)
+	players_entering_words = models.ManyToManyField(User, related_name="players_entering_words", blank=True)
 	host = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name="host", blank=True)
 	player_order = models.TextField(default="", blank=True)
+	words_per_player = models.IntegerField(default=0, null=True)
+	seconds_per_player = models.IntegerField(default=0, null=True)
+	skips_per_player = models.IntegerField(default=0, null=True)
+	current_player = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="current_player", blank=True)
 
 	def __str__(self):
 		return self.name
@@ -45,6 +49,7 @@ class team(models.Model):
 	name = models.TextField(default="", blank=True)
 	players = models.ManyToManyField(User, blank=True)
 	points = models.IntegerField(default=0, blank=True)
+	lists_game = models.ForeignKey('lists_game', on_delete=models.CASCADE, null=True, blank=True)
 
 	def __str__(self):
 		return self.name

@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.template import loader
 from django.contrib.auth.decorators import login_required
 from website.forms import *
+import json
 
 import re
 import datetime
@@ -42,13 +43,20 @@ def lists(request):
                 new_lists_game = lists_game.objects.create(name=new_game_form.cleaned_data['game_name'], host=request.user)
                 new_lists_game.save()
                 new_lists_game.players.add(request.user)
+                new_lists_game.players_entering_words.add(request.user)
                 return redirect('configure_lists_game', game_name=new_lists_game.name)
         elif request.POST.get('join_game'):
             join_game_form = joinGameForm(request.POST, pending_games=list(lists_game.objects.filter(state='pending').values_list('name', flat=True)))
             if join_game_form.is_valid():
                 game_name = request.POST.get('join_game')
-                lists_game.objects.get(name=game_name).players.add(request.user)
-                return redirect('lists_game_page', game_name=game_name)
+                lists_game_obj = lists_game.objects.get(name=game_name)
+                if lists_game_obj.state == "pending":
+                    if lists_game_obj.host == request.user:
+                        return redirect('configure_lists_game', game_name=game_name)
+                    else:
+                        lists_game_obj.players.add(request.user)
+                        lists_game_obj.players_entering_words.add(request.user)
+                        return redirect('lists_game_page', game_name=game_name)
 
     context = {'new_game_form': new_game_form,
                'join_game_form': join_game_form}
@@ -71,9 +79,18 @@ def configure_lists_game(request, game_name):
                 player_order = []
                 for i in range(len(players)):
                     player_order.append(configure_game_form.cleaned_data["position_" + str(i)])
-                lists_game_obj.player_order = str(player_order)
-                lists_game_obj.state = "started"
+                lists_game_obj.player_order = json.dumps(player_order)
+                lists_game_obj.words_per_player = configure_game_form.cleaned_data['num_words']
+                lists_game_obj.seconds_per_player = configure_game_form.cleaned_data['num_seconds']
+                lists_game_obj.skips_per_player = configure_game_form.cleaned_data['num_skips']
+                lists_game_obj.state = "entering"
                 lists_game_obj.save()
+                for i in range(configure_game_form.cleaned_data['num_teams']):
+                    team_obj = team.objects.create(name="Team " + str(i+1), lists_game=lists_game_obj)
+                    for j, player in enumerate(player_order):
+                        if (j - i) % configure_game_form.cleaned_data['num_teams'] == 0:
+                            team_obj.players.add(User.objects.get(username=player))
+                    team_obj.save()
                 return redirect('lists_game_page', game_name=game_name)
 
     context = {'configure_game_form': configure_game_form}
@@ -81,12 +98,33 @@ def configure_lists_game(request, game_name):
 
 @login_required
 def lists_game_page(request, game_name):
-    if request.user not in lists_game.objects.get(name=game_name).players.all():
+    lists_game_obj = lists_game.objects.get(name=game_name)
+    if request.user not in lists_game_obj.players.all():
         redirect('lists')
 
-    # TODO send state to html
+    entering_words_form = enteringWordsForm(num_words=lists_game_obj.words_per_player)
 
-    context = {'game_name': game_name}
+    if request.method == 'POST':
+        print(request.POST)
+        if request.POST.get('done_entering'):
+            entering_words_form = enteringWordsForm(request.POST, num_words=lists_game_obj.words_per_player)
+            if entering_words_form.is_valid():
+                for i in range(lists_game_obj.words_per_player):
+                    word_obj = word.objects.create(word=entering_words_form.cleaned_data["word_" + str(i)])
+                    word_obj.save()
+                    lists_game_obj.words.add(word_obj)
+                lists_game_obj.players_entering_words.remove(request.user)
+                lists_game_obj.save()
+                if len(lists_game_obj.players_entering_words.all()) == 0:
+                    lists_game_obj.state = "started"
+                    lists_game_obj.current_player = lists_game_obj.players.get(username=json.loads(lists_game_obj.player_order)[0])
+                    lists_game_obj.save()
+                return redirect('lists_game_page', game_name=game_name)
+
+    # TODO: Write javascript to start the game/timer, display words, choose which were guess correctly, etc etc
+
+    context = {'entering_words_form': entering_words_form,
+               'lists_game_obj': lists_game_obj}
     return render(request, 'website/lists_game_page.html', context)
 
 def new_user(request):
