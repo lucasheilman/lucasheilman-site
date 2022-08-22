@@ -15,6 +15,7 @@
   {% if lists_game_obj.state == "pending" %}
     <h3> Waiting for {{ lists_game_obj.host }} to configure {{ lists_game_obj.name }} </h3>
   {% endif %}
+
   {% if lists_game_obj.state == "entering" %}
     <h3> Waiting for {% for player in lists_game_obj.players_entering_words.all %} {{player.username}}, {% endfor %} to enter words for {{ lists_game_obj.name }} </h3>
     {% if request.user in lists_game_obj.players_entering_words.all %}
@@ -23,12 +24,98 @@
       </form>
     {% endif %}
   {% endif %}
+
   {% if lists_game_obj.state == "started" and lists_game_obj.current_player != request.user %}
+    <h5>
+      Round: {{ lists_game_obj.current_round }} of {{ lists_game_obj.num_rounds }} |
+      {% for team in teams %}
+        {{ team.name }}: {{ team.points }} points |
+      {% endfor %}
+    </h5>
     <h3> It's {{ lists_game_obj.current_player }}'s turn </h3>
   {% endif %}
+
   {% if lists_game_obj.state == "started" and lists_game_obj.current_player == request.user %}
+    <h5>
+      Round: {{ lists_game_obj.current_round }} of {{ lists_game_obj.num_rounds }} |
+      {% for team in teams %}
+        {{ team.name }}: {{ team.points }} points |
+      {% endfor %}
+    </h5>
     <h3> It's your turn! </h3>
+    <form method="post" novalidate style="margin-left: 5px">
+      {% crispy guessing_words_form %}
+    </form>
   {% endif %}
+
+  {% if lists_game_obj.state == "done" %}
+    <h1> GAME COMPLETE </h1>
+    {% for team in teams %}
+      <h2> {{ team.name }}: {{ team.points }} points </h2>
+    {% endfor %}
+  {% endif %}
+
+
+<script>
+
+  var word_list = {% autoescape off %} {{ word_list }} {% endautoescape %}
+  var seen_words = []
+  var curr_word = ''
+  var timeLeft = {{ lists_game_obj.seconds_per_player }}
+
+  function startTimer(){
+
+    document.getElementById("button-id-start").style.display = 'none'
+    document.getElementById("word").style.display = ''
+    document.getElementById("button-id-next_word").style.display = ''
+
+    var elem = document.getElementById('countdown');
+    elem.innerHTML = timeLeft
+    timeLeft--
+
+    var timerId = setInterval(countdown, 1000);
+
+    function countdown() {
+      if (timeLeft == -1) {
+        clearTimeout(timerId)
+        document.getElementById("word").style.display = 'none'
+        document.getElementById("button-id-next_word").style.display = 'none'
+        elem.innerHTML = 'DONE'
+
+        document.getElementById("guessed_words_title").style.display = ''
+        for (var i = 0; i < seen_words.length; i++){
+          document.getElementById("div_id_word_" + seen_words[i]).parentNode.style.display = ''
+        }
+        document.getElementById("submit-id-guessed_words").style.display = ''
+      } else {
+        elem.innerHTML = timeLeft
+        timeLeft--
+      }
+    }
+
+    var word_index = Math.floor(Math.random() * word_list.length)
+    curr_word = word_list[word_index]
+    word_list.splice(word_index, 1)
+    seen_words.push(curr_word)
+    document.getElementById("word").textContent = curr_word
+  }
+
+  function nextWord(){
+    if (word_list.length > 0) {
+      var word_index = Math.floor(Math.random() * word_list.length)
+      curr_word = word_list[word_index]
+      word_list.splice(word_index, 1)
+      seen_words.push(curr_word)
+      document.getElementById("word").textContent = curr_word
+    }
+    else {
+      document.getElementById("word").textContent = ''
+      document.getElementById("button-id-next_word").style.display = 'none'
+      timeLeft = -1
+    }
+  }
+
+</script>
 
 
 {% endblock %}

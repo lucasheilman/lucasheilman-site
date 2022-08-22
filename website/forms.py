@@ -102,15 +102,23 @@ class configureGameForm(forms.Form):
 
         self.fields['num_teams'] = forms.IntegerField()
         self.fields['num_teams'].label = "Number of Teams"
+        self.fields['num_teams'].initial = 2
         self.fields['num_words'] = forms.IntegerField()
         self.fields['num_words'].label = "Number of Words per Player"
+        self.fields['num_words'].initial = 3
         self.fields['num_seconds'] = forms.IntegerField()
         self.fields['num_seconds'].label = "Number of Seconds per Player"
-        self.fields['num_skips'] = forms.IntegerField()
-        self.fields['num_skips'].label = "Number of Skips per Player"
+        self.fields['num_seconds'].initial = 60
+        self.fields['num_rounds'] = forms.IntegerField()
+        self.fields['num_rounds'].label = "Number of Rounds"
+        self.fields['num_rounds'].initial = 3
 
         layout.append(HTML("<h3> Teams </h3>"))
-        layout.append(Row('num_teams'))
+        layout.append(Row('num_teams', onChange="numTeamsUpdate()"))
+        for i in range(int(len(players)/2)):
+            self.fields["team_" + str(i)] = forms.CharField()
+            self.fields["team_" + str(i)].label = "Team {} Name:".format(i+1)
+            layout.append(Row("team_" + str(i), style="display:none"))
 
         layout.append(HTML("<br><h3> Positions </h3>"))
 
@@ -122,7 +130,7 @@ class configureGameForm(forms.Form):
         layout.append(HTML("<br><h3> Rules </h3>"))
         layout.append(Row('num_words'))
         layout.append(Row('num_seconds'))
-        layout.append(Row('num_skips'))
+        layout.append(Row('num_rounds'))
 
         layout.append(Submit('start_game', 'Start Game'))
 
@@ -132,21 +140,30 @@ class configureGameForm(forms.Form):
 
     def clean(self):
         selected_players = []
-        error_fields = []
-        print(self.cleaned_data)
+        player_error_fields = []
+        team_names = []
+        team_error_fields = []
         for field in self.cleaned_data:
             if field.startswith('position_'):
                 player = self.cleaned_data.get(field)
                 if player in selected_players:
-                    error_fields.append(field)
+                    player_error_fields.append(field)
                 else:
                     selected_players.append(player)
+            elif field.startswith("team_"):
+                team = self.cleaned_data.get(field)
+                if team in team_names:
+                    team_error_fields.append(field)
+                else:
+                    team_names.append(team)
 
-        for field in error_fields:
+        for field in player_error_fields:
             msg = forms.ValidationError("Player already selected for another position")
             self.add_error(field, msg)
 
-        print(self.cleaned_data)
+        for field in team_error_fields:
+            msg = forms.ValidationError("Team names must be unique")
+            self.add_error(field, msg)
 
         if self.cleaned_data.get('num_teams') == None:
             pass
@@ -166,6 +183,7 @@ class enteringWordsForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         num_words = kwargs.pop('num_words')
+        self.game_name = kwargs.pop('game_name')
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
 
@@ -179,6 +197,55 @@ class enteringWordsForm(forms.Form):
             layout.append(Row("word_" + str(i)))
 
         layout.append(Submit('done_entering', 'Done'))
+
+        self.helper.layout = Layout(*layout)
+
+        self.helper.form_tag = False
+
+    def clean(self):
+        words_so_far = []
+        error_fields = []
+        for field in self.cleaned_data:
+            if field.startswith('word'):
+                trimmed_word = self.cleaned_data[field]
+                if trimmed_word in words_so_far:
+                    error_fields.append(field)
+                    continue
+                else:
+                    words_so_far.append(trimmed_word)
+                lists_game_obj = lists_game.objects.get(name=self.game_name)
+                for list_game_word in word.objects.filter(lists_game=lists_game_obj):
+                    if trimmed_word == list_game_word.word:
+                        error_fields.append(field)
+                        break
+
+        for field in error_fields:
+            msg = forms.ValidationError("Word already entered by you or someone else")
+            self.add_error(field, msg)
+        return self.cleaned_data
+
+class guessingWordsForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        words = kwargs.pop('words')
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+
+        layout = []
+
+        layout.append(Row(Button("start", "Start!", css_class="btn btn-primary btn-lg", onclick="startTimer()")))
+        layout.append(HTML('<h2 id="countdown" style="color:red"> </h2>'))
+        layout.append(HTML('<br><h1 id="word" style="display:none"> </h1><br><br>'))
+
+        layout.append(Button("next_word", "Next Word", css_class="btn btn-info btn-lg", onclick="nextWord()", style="display:none"))
+
+        layout.append(HTML('<h2 id=guessed_words_title style="display:none"> Which words did you get? </h2>'))
+        for word in words:
+            self.fields["word_" + word.word] = forms.BooleanField(required=False)
+            self.fields["word_" + word.word].label = word.word
+            layout.append(Row("word_" + word.word, style="display:none"))
+
+        layout.append(Submit('guessed_words', "Confirm", style="display:none;margin-top:20px"))
 
         self.helper.layout = Layout(*layout)
 

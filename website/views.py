@@ -82,11 +82,11 @@ def configure_lists_game(request, game_name):
                 lists_game_obj.player_order = json.dumps(player_order)
                 lists_game_obj.words_per_player = configure_game_form.cleaned_data['num_words']
                 lists_game_obj.seconds_per_player = configure_game_form.cleaned_data['num_seconds']
-                lists_game_obj.skips_per_player = configure_game_form.cleaned_data['num_skips']
+                lists_game_obj.num_rounds = configure_game_form.cleaned_data['num_rounds']
                 lists_game_obj.state = "entering"
                 lists_game_obj.save()
                 for i in range(configure_game_form.cleaned_data['num_teams']):
-                    team_obj = team.objects.create(name="Team " + str(i+1), lists_game=lists_game_obj)
+                    team_obj = team.objects.create(name=configure_game_form.cleaned_data["team_" + str(i)], lists_game=lists_game_obj)
                     for j, player in enumerate(player_order):
                         if (j - i) % configure_game_form.cleaned_data['num_teams'] == 0:
                             team_obj.players.add(User.objects.get(username=player))
@@ -102,17 +102,17 @@ def lists_game_page(request, game_name):
     if request.user not in lists_game_obj.players.all():
         redirect('lists')
 
-    entering_words_form = enteringWordsForm(num_words=lists_game_obj.words_per_player)
+    entering_words_form = enteringWordsForm(num_words=lists_game_obj.words_per_player, game_name=game_name)
+    guessing_words_form = guessingWordsForm(words=word.objects.filter(lists_game=lists_game_obj))
 
     if request.method == 'POST':
         print(request.POST)
         if request.POST.get('done_entering'):
-            entering_words_form = enteringWordsForm(request.POST, num_words=lists_game_obj.words_per_player)
+            entering_words_form = enteringWordsForm(request.POST, num_words=lists_game_obj.words_per_player, game_name=game_name)
             if entering_words_form.is_valid():
                 for i in range(lists_game_obj.words_per_player):
-                    word_obj = word.objects.create(word=entering_words_form.cleaned_data["word_" + str(i)])
+                    word_obj = word.objects.create(lists_game=lists_game_obj, word=entering_words_form.cleaned_data["word_" + str(i)])
                     word_obj.save()
-                    lists_game_obj.words.add(word_obj)
                 lists_game_obj.players_entering_words.remove(request.user)
                 lists_game_obj.save()
                 if len(lists_game_obj.players_entering_words.all()) == 0:
@@ -121,10 +121,46 @@ def lists_game_page(request, game_name):
                     lists_game_obj.save()
                 return redirect('lists_game_page', game_name=game_name)
 
-    # TODO: Write javascript to start the game/timer, display words, choose which were guess correctly, etc etc
+        if request.POST.get('guessed_words'):
+            guessing_words_form = guessingWordsForm(request.POST, words=word.objects.filter(lists_game=lists_game_obj))
+            if guessing_words_form.is_valid():
+                print(guessing_words_form.cleaned_data)
+                for field in guessing_words_form.cleaned_data:
+                    if field.startswith('word_') and guessing_words_form.cleaned_data[field]:
+                        word_obj = word.objects.get(lists_game=lists_game_obj, word=field[5:])
+                        word_obj.used = True
+                        word_obj.save()
+                        for team_obj in team.objects.filter(lists_game=lists_game_obj):
+                            if request.user in team_obj.players.all():
+                                team_obj.points = team_obj.points + 1
+                                team_obj.save()
+                                break
+                player_order_list = json.loads(lists_game_obj.player_order)
+                next_player_username = player_order_list[(player_order_list.index(lists_game_obj.current_player.username) + 1) % len(player_order_list)]
+                lists_game_obj.current_player = lists_game_obj.players.get(username=next_player_username)
+
+                # If no unused words left
+                if not word.objects.filter(lists_game=lists_game_obj, used=False):
+                    # If this was our last round, then we're done
+                    if lists_game_obj.current_round == lists_game_obj.num_rounds:
+                        lists_game_obj.state = "done"
+                    # Otherwise, start the next round and mark all words unused
+                    else:
+                        lists_game_obj.current_round = lists_game_obj.current_round + 1
+                        for word_obj in word.objects.filter(lists_game=lists_game_obj):
+                            word_obj.used = False
+                            word_obj.save()
+
+                lists_game_obj.save()
+
+                # TODO: Restart button? clean up button? More stats?
+                return redirect('lists_game_page', game_name=game_name)
 
     context = {'entering_words_form': entering_words_form,
-               'lists_game_obj': lists_game_obj}
+               'lists_game_obj': lists_game_obj,
+               'guessing_words_form': guessing_words_form,
+               'teams': team.objects.filter(lists_game=lists_game_obj).order_by('name'),
+               'word_list': list(word.objects.filter(lists_game=lists_game_obj, used=False).values_list('word', flat=True))}
     return render(request, 'website/lists_game_page.html', context)
 
 def new_user(request):
