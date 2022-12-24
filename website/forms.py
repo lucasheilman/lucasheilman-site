@@ -118,6 +118,7 @@ class configureGameForm(forms.Form):
         for i in range(int(len(players)/2)):
             self.fields["team_" + str(i)] = forms.CharField()
             self.fields["team_" + str(i)].label = "Team {} Name:".format(i+1)
+            self.fields["team_" + str(i)].required = False
             layout.append(Row("team_" + str(i), style="display:none"))
 
         layout.append(HTML("<br><h3> Positions </h3>"))
@@ -141,8 +142,6 @@ class configureGameForm(forms.Form):
     def clean(self):
         selected_players = []
         player_error_fields = []
-        team_names = []
-        team_error_fields = []
         for field in self.cleaned_data:
             if field.startswith('position_'):
                 player = self.cleaned_data.get(field)
@@ -150,19 +149,9 @@ class configureGameForm(forms.Form):
                     player_error_fields.append(field)
                 else:
                     selected_players.append(player)
-            elif field.startswith("team_"):
-                team = self.cleaned_data.get(field)
-                if team in team_names:
-                    team_error_fields.append(field)
-                else:
-                    team_names.append(team)
 
         for field in player_error_fields:
             msg = forms.ValidationError("Player already selected for another position")
-            self.add_error(field, msg)
-
-        for field in team_error_fields:
-            msg = forms.ValidationError("Team names must be unique")
             self.add_error(field, msg)
 
         if self.cleaned_data.get('num_teams') == None:

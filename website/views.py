@@ -86,12 +86,15 @@ def configure_lists_game(request, game_name):
                 lists_game_obj.state = "entering"
                 lists_game_obj.save()
                 for i in range(configure_game_form.cleaned_data['num_teams']):
-                    team_obj = team.objects.create(name=configure_game_form.cleaned_data["team_" + str(i)], lists_game=lists_game_obj)
+                    team_name = configure_game_form.cleaned_data["team_" + str(i)] if configure_game_form.cleaned_data["team_" + str(i)] else "Team " + str(i+1)
+                    team_obj = team.objects.create(name=team_name, lists_game=lists_game_obj)
                     for j, player in enumerate(player_order):
                         if (j - i) % configure_game_form.cleaned_data['num_teams'] == 0:
                             team_obj.players.add(User.objects.get(username=player))
                     team_obj.save()
                 return redirect('lists_game_page', game_name=game_name)
+            else:
+                print(configure_game_form.errors)
 
     context = {'configure_game_form': configure_game_form}
     return render(request, 'website/configure_lists_game.html', context)
