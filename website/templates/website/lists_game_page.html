@@ -61,7 +61,7 @@
   var word_list = {% autoescape off %} {{ word_list }} {% endautoescape %}
   var seen_words = []
   var curr_word = ''
-  var timeLeft = {{ lists_game_obj.seconds_per_player }}
+  var timeLeft = {{ lists_game_obj.time_remaining }}
 
   function startTimer(){
 
@@ -111,6 +111,7 @@
     else {
       document.getElementById("word").textContent = ''
       document.getElementById("button-id-next_word").style.display = 'none'
+      document.getElementById("id_time_remaining").value = timeLeft;
       timeLeft = -1
     }
   }

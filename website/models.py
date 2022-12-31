@@ -34,6 +34,7 @@ class lists_game(models.Model):
 	current_player = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="current_player", blank=True)
 	current_round = models.IntegerField(default=1)
 	num_rounds = models.IntegerField(default=3)
+	time_remaining = models.IntegerField(default=0)
 
 	def __str__(self):
 		return self.name

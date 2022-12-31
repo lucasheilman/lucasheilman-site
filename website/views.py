@@ -84,6 +84,7 @@ def configure_lists_game(request, game_name):
                 lists_game_obj.seconds_per_player = configure_game_form.cleaned_data['num_seconds']
                 lists_game_obj.num_rounds = configure_game_form.cleaned_data['num_rounds']
                 lists_game_obj.state = "entering"
+                lists_game_obj.time_remaining = configure_game_form.cleaned_data['num_seconds']
                 lists_game_obj.save()
                 for i in range(configure_game_form.cleaned_data['num_teams']):
                     team_name = configure_game_form.cleaned_data["team_" + str(i)] if configure_game_form.cleaned_data["team_" + str(i)] else "Team " + str(i+1)
@@ -138,11 +139,11 @@ def lists_game_page(request, game_name):
                                 team_obj.points = team_obj.points + 1
                                 team_obj.save()
                                 break
+
                 player_order_list = json.loads(lists_game_obj.player_order)
                 next_player_username = player_order_list[(player_order_list.index(lists_game_obj.current_player.username) + 1) % len(player_order_list)]
-                lists_game_obj.current_player = lists_game_obj.players.get(username=next_player_username)
-
-                # If no unused words left
+                lists_game_obj.time_remaining = lists_game_obj.seconds_per_player
+                # If no unused words left, round is finished
                 if not word.objects.filter(lists_game=lists_game_obj, used=False):
                     # If this was our last round, then we're done
                     if lists_game_obj.current_round == lists_game_obj.num_rounds:
@@ -153,6 +154,15 @@ def lists_game_page(request, game_name):
                         for word_obj in word.objects.filter(lists_game=lists_game_obj):
                             word_obj.used = False
                             word_obj.save()
+                        # This player had time left, dont go to next player
+                        if guessing_words_form.cleaned_data.get("time_remaining") and guessing_words_form.cleaned_data.get("time_remaining", -1) > 0:
+                            lists_game_obj.time_remaining = guessing_words_form.cleaned_data["time_remaining"]
+                        # No time left, go to next player
+                        else:
+                            lists_game_obj.current_player = lists_game_obj.players.get(username=next_player_username)
+                # round still going, go to next player
+                else:
+                    lists_game_obj.current_player = lists_game_obj.players.get(username=next_player_username)
 
                 lists_game_obj.save()
 

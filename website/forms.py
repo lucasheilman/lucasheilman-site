@@ -234,6 +234,9 @@ class guessingWordsForm(forms.Form):
             self.fields["word_" + word.word].label = word.word
             layout.append(Row("word_" + word.word, style="display:none"))
 
+        self.fields["time_remaining"] = forms.IntegerField(required=False)
+        layout.append(Row("time_remaining", style="display:none"))
+
         layout.append(Submit('guessed_words', "Confirm", style="display:none;margin-top:20px"))
 
         self.helper.layout = Layout(*layout)
