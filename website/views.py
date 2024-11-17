@@ -78,7 +78,12 @@ def configure_lists_game(request, game_name):
             if configure_game_form.is_valid():
                 player_order = []
                 for i in range(len(players)):
-                    player_order.append(configure_game_form.cleaned_data["position_" + str(i)])
+                    if configure_game_form.cleaned_data["position_" + str(i)] != '':
+                        player_order.append(configure_game_form.cleaned_data["position_" + str(i)])
+                for player in lists_game_obj.players.all():
+                    if player.username not in player_order:
+                        lists_game_obj.players.remove(player)
+                        lists_game_obj.players_entering_words.remove(player)
                 lists_game_obj.player_order = json.dumps(player_order)
                 lists_game_obj.words_per_player = configure_game_form.cleaned_data['num_words']
                 lists_game_obj.seconds_per_player = configure_game_form.cleaned_data['num_seconds']

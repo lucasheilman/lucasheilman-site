@@ -126,6 +126,7 @@ class configureGameForm(forms.Form):
         for i in range(len(players)):
             self.fields["position_" + str(i)] = forms.ChoiceField(choices=[('', '----------')] + choices_list)
             self.fields["position_" + str(i)].label = "Position {}:".format(i+1)
+            self.fields["position_" + str(i)].required = False
             layout.append(Row("position_" + str(i)))
 
         layout.append(HTML("<br><h3> Rules </h3>"))
@@ -143,7 +144,7 @@ class configureGameForm(forms.Form):
         selected_players = []
         player_error_fields = []
         for field in self.cleaned_data:
-            if field.startswith('position_'):
+            if field.startswith('position_') and (self.cleaned_data.get(field) != ''):
                 player = self.cleaned_data.get(field)
                 if player in selected_players:
                     player_error_fields.append(field)
