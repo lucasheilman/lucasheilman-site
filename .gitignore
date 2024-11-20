@@ -1,1 +1,5 @@
 db.sqlite3
+website/migrations/*
+venv/*
+Pipfile.lock
+lucasheilman/static/*

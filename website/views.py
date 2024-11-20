@@ -28,7 +28,8 @@ def index(request):
     context['social_medias'] = list(index_page.social_medias.all().order_by('order'))
     context['is_mobile'] = mobile(request)
     context['year'] = datetime.datetime.today().year
-    return render(request, 'website/index.html', context)
+    # return render(request, 'website/index.html', context)
+    return redirect('lists')
 
 @login_required
 def lists(request):
