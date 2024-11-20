@@ -22,12 +22,12 @@ def mobile(request):
         return False
 
 def index(request):
-    context = {}
-    index_page = page.objects.get(page_name = "index")
-    context['index'] = index_page
-    context['social_medias'] = list(index_page.social_medias.all().order_by('order'))
-    context['is_mobile'] = mobile(request)
-    context['year'] = datetime.datetime.today().year
+    # context = {}
+    # index_page = page.objects.get(page_name = "index")
+    # context['index'] = index_page
+    # context['social_medias'] = list(index_page.social_medias.all().order_by('order'))
+    # context['is_mobile'] = mobile(request)
+    # context['year'] = datetime.datetime.today().year
     # return render(request, 'website/index.html', context)
     return redirect('lists')
 
