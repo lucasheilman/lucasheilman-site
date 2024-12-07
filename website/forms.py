@@ -9,7 +9,7 @@ from django import forms
 
 
 class newUserForm(forms.Form):
-    username = forms.CharField()
+    username = forms.CharField(widget=forms.TextInput(attrs={'autocapitalize': 'off'}))
     password = forms.CharField(widget=forms.PasswordInput)
 
     def __init__(self, *args, **kwargs):
