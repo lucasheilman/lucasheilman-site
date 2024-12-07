@@ -68,12 +68,34 @@ class joinGameForm(forms.Form):
 
         layout = []
 
-        layout.extend([
-            HTML("<h3> Join Game </h3>")]
-        )
+        if pending_games:
+            layout.extend([
+                HTML("<h3> Join Game </h3>")]
+            )
 
         for game in pending_games:
             layout.append(Submit("join_game", game))
+
+        self.helper.layout = Layout(*layout)
+
+        self.helper.form_tag = False
+
+class activeGamesForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        active_games = kwargs.pop('active_games')
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+
+        layout = []
+
+        if active_games:
+            layout.extend([
+                HTML("<h3> Your Active Games </h3>")]
+            )
+
+        for game in active_games:
+            layout.append(Submit("active_games", game))
 
         self.helper.layout = Layout(*layout)
 
@@ -226,6 +248,7 @@ class guessingWordsForm(forms.Form):
         layout.append(Row(Button("start", "Start!", css_class="btn btn-primary btn-lg", onclick="startTimer()")))
         layout.append(HTML('<h2 id="countdown" style="color:red"> </h2>'))
         layout.append(HTML('<br><h1 id="word" style="display:none"> </h1><br><br>'))
+        layout.append(HTML('<h4 id="words_remaning"> </h4>'))
 
         layout.append(Button("next_word", "Next Word", css_class="btn btn-info btn-lg", onclick="nextWord()", style="display:none"))
 

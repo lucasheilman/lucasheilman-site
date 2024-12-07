@@ -35,6 +35,7 @@ def index(request):
 def lists(request):
     new_game_form = newGameForm()
     join_game_form = joinGameForm(pending_games=list(lists_game.objects.filter(state='pending').values_list('name', flat=True)))
+    active_games_form = activeGamesForm(active_games=list(lists_game.objects.filter(state__in=['started', 'entering'], players=request.user).values_list('name', flat=True)))
 
     if request.method == 'POST':
         print(request.POST)
@@ -58,9 +59,15 @@ def lists(request):
                         lists_game_obj.players.add(request.user)
                         lists_game_obj.players_entering_words.add(request.user)
                         return redirect('lists_game_page', game_name=game_name)
+        if request.POST.get('active_games'):
+            active_games_form = activeGamesForm(request.POST, active_games=list(lists_game.objects.filter(state__in=['started', 'entering'], players=request.user).values_list('name', flat=True)))
+            if active_games_form.is_valid():
+                game_name = request.POST.get('active_games')
+                return redirect('lists_game_page', game_name=game_name)
 
     context = {'new_game_form': new_game_form,
-               'join_game_form': join_game_form}
+               'join_game_form': join_game_form,
+               'active_games_form': active_games_form}
     return render(request, 'website/lists.html', context)
 
 @login_required
@@ -110,7 +117,7 @@ def configure_lists_game(request, game_name):
 def lists_game_page(request, game_name):
     lists_game_obj = lists_game.objects.get(name=game_name)
     if request.user not in lists_game_obj.players.all():
-        redirect('lists')
+        return redirect('lists')
 
     entering_words_form = enteringWordsForm(num_words=lists_game_obj.words_per_player, game_name=game_name)
     guessing_words_form = guessingWordsForm(words=word.objects.filter(lists_game=lists_game_obj))
@@ -179,7 +186,8 @@ def lists_game_page(request, game_name):
                'lists_game_obj': lists_game_obj,
                'guessing_words_form': guessing_words_form,
                'teams': team.objects.filter(lists_game=lists_game_obj).order_by('name'),
-               'word_list': list(word.objects.filter(lists_game=lists_game_obj, used=False).values_list('word', flat=True))}
+               'word_list': list(word.objects.filter(lists_game=lists_game_obj, used=False).values_list('word', flat=True)),
+               'word_count': word.objects.filter(lists_game=lists_game_obj, used=False).count()}
     return render(request, 'website/lists_game_page.html', context)
 
 def new_user(request):

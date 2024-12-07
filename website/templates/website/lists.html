@@ -13,6 +13,10 @@
     {% csrf_token %}
 
     <form method="post" novalidate style="margin-left: 5px">
+        {% crispy active_games_form %}
+    </form>
+
+    <form method="post" novalidate style="margin-left: 5px">
         {% crispy join_game_form %}
     </form>
 
