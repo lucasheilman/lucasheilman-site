@@ -25,19 +25,18 @@
     </form>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Enable all submit buttons initially
-        document.querySelectorAll("button[type='submit']").forEach(function(button) {
-            button.disabled = false;
-        });
 
-        // Add event listener to all forms
-        document.querySelectorAll("form").forEach(function(form) {
-            form.addEventListener('submit', function(event) {
-                // Disable all submit buttons to prevent multiple submissions
-                document.querySelectorAll("button[type='submit']").forEach(function(button) {
-                    button.disabled = true;
-                });
+    // Enable all submit buttons initially
+    document.querySelectorAll("[id^='submit-id']").forEach(function(button) {
+        button.style.display = '';
+    });
+
+    // Add event listener to all forms
+    document.querySelectorAll("form").forEach(function(form) {
+        form.addEventListener('submit', function(event) {
+            // Disable all submit buttons to prevent multiple submissions
+            document.querySelectorAll("[id^='submit-id']").forEach(function(button) {
+                button.style.display = 'none';
             });
         });
     });

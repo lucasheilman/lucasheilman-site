@@ -20,28 +20,26 @@
       <td>{{ form.password }}</td>
     </tr>
   </table>
-  <input type="submit" value="login" />
+  <input id="submit-id-login" type="submit" value="login" />
 </form>
 
 <p><a href="{% url 'new_user' %}">New User</a></p>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Enable all submit buttons initially
-        document.querySelectorAll("button[type='submit']").forEach(function(button) {
-            button.disabled = false;
-        });
+  // Enable all submit buttons initially
+  document.querySelectorAll("[id^='submit-id']").forEach(function(button) {
+      button.style.display = '';
+  });
 
-        // Add event listener to all forms
-        document.querySelectorAll("form").forEach(function(form) {
-            form.addEventListener('submit', function(event) {
-                // Disable all submit buttons to prevent multiple submissions
-                document.querySelectorAll("button[type='submit']").forEach(function(button) {
-                    button.disabled = true;
-                });
-            });
-        });
-    });
+  // Add event listener to all forms
+  document.querySelectorAll("form").forEach(function(form) {
+      form.addEventListener('submit', function(event) {
+          // Disable all submit buttons to prevent multiple submissions
+          document.querySelectorAll("[id^='submit-id']").forEach(function(button) {
+              button.style.display = 'none';
+          });
+      });
+  });
 </script>
 
 {% endblock %}
